@@ -116,7 +116,7 @@ var textToClear = ["#g805", "#g809", "#g813", "#g787", "#g791", "#g795",
     for (var j=0; j<textToClear.length; j++){
       d3.select('#keyboard')
         .selectAll("g")
-        .select(textToClear[i])
+        .selectAll(textToClear[j])
         .remove();                //not removing element
     };
 
