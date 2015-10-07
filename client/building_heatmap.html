@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"
+        charset="utf-8"></script>
+    <!-- <img src="./img/Qwerty.svg"></script> -->
+</head>
+<body>
+  <script>
+
+  //This is where I'm going to temporarily write my d3 code
+      //note: in svg, path id# is the boxes. Numbers from 9-201
+
+  var type = function (path) {
+
+  }
+
+      d3.xml("https://upload.wikimedia.org/wikipedia/commons/3/3a/Qwerty.svg",
+        "image/svg+xml", function(xml) {
+          document.body.appendChild(xml.documentElement).setAttribute("id", "keyboard");
+
+          d3.select('#keyboard')
+            .selectAll("g")
+            .select('#path11')
+            .style("fill", "#000000");
+            // .append('h2').html('~~~~~~~~~~~LAYER ONE SELECTED!~~~~~~~~~~~~');
+      });
+
+      //this works
+      d3.select('body').append('h1').html('Sample Text')
+        .on("mouseover", function(d){
+          d3.select(this).style("color", "blue");
+        });
+
+      // //this works
+      // var svgContainer = d3.select("body").append("svg")
+      //                       .attr("id", "container")
+      //                       .attr("width", 200)
+      //                       .attr("height", 200)
+      //                       .attr("fill", "blue");
+      // d3.select('#container')
+      //   .append('h2').html('keyboard selected!');
+
+  //why am I not appending to the keyboard
+    //I believe it is because I can't effect the keyboard after that import
+
+      // //this doesn't
+      // d3.select('body')
+      //   .select('#keyboard')
+      //   .attr("id", "selected");
+
+      //   //path41 is Q
+      // d3.select('#keyboard')
+      //   .select('#path41')
+      //   .style('fill', 'blue');
+
+
+  </script>
+
+</body>
+</html>
