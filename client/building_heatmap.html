@@ -7,6 +7,12 @@
     <!-- <img src="./img/Qwerty.svg"></script> -->
 </head>
 <body>
+
+  <form>
+    <input id="target" type="text">
+  </form>
+
+  <script src="./bower_components/jquery/jquery.js"></script>
   <script>
 
   var idLibrary = {
@@ -68,51 +74,54 @@
   //This is where I'm going to temporarily write my d3 code
       //note: in svg, path id# is the boxes. Numbers from 9-201
 
-  var typeOnKey = function (letter) {
+var toClearOut = ["#path781", "#path783", "#path785", "#path817", "#path799",
+  "#path801", "#path803", "#path805"];
+
+var textToClear = ["#g805", "#g809", "#g813", "#g787", "#g791", "#g795",
+  "#g821", "#g825"];
+
+
+  var typeOnKey = function (letter, color) {
     var path = idLibrary[letter];
     d3.select('#keyboard')
       .selectAll("g")
       .select(path)
-      .style("fill", "#000000");
-  }
+      .style("fill", color);
+  };
 
   d3.xml("https://upload.wikimedia.org/wikipedia/commons/3/3a/Qwerty.svg",
     "image/svg+xml", function(xml) {
       document.body.appendChild(xml.documentElement).setAttribute("id", "keyboard");
 
-      typeOnKey('m');
+      var fill = "#97c5d5";
+      $("#target").keypress(function(event){
+        var keyCode = event.keyCode;
+        var letter = String.fromCharCode(keyCode);
+        typeOnKey(letter, "#000000");
+      });
+
+      $("#target").keyup(function(event){
+        var keyCode = event.keyCode;
+        var letter = String.fromCharCode(keyCode);
+        typeOnKey(letter, "#97c5d5");
+      });
+
+    for (var i=0; i<toClearOut.length; i++){
+      d3.select('#keyboard')
+        .selectAll("g")
+        .select(toClearOut[i])
+        .style("fill", "#FFFFFF");
+    };
+
+    for (var j=0; j<textToClear.length; j++){
+      d3.select('#keyboard')
+        .selectAll("g")
+        .select(textToClear[i])
+        .remove();                //not removing element
+    };
+
   });
 
-  //this works
-  d3.select('body').append('h1').html('Sample Text')
-    .on("mouseover", function(d){
-      d3.select(this).style("color", "blue");
-    });
-
-      // //this works
-      // var svgContainer = d3.select("body").append("svg")
-      //                       .attr("id", "container")
-      //                       .attr("width", 200)
-      //                       .attr("height", 200)
-      //                       .attr("fill", "blue");
-      // d3.select('#container')
-      //   .append('h2').html('keyboard selected!');
-
-  //why am I not appending to the keyboard
-    //I believe it is because I can't effect the keyboard after that import
-
-      // //this doesn't
-      // d3.select('body')
-      //   .select('#keyboard')
-      //   .attr("id", "selected");
-
-      //   //path41 is Q
-      // d3.select('#keyboard')
-      //   .select('#path41')
-      //   .style('fill', 'blue');
-
-
   </script>
-
 </body>
 </html>
