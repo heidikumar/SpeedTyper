@@ -10,8 +10,10 @@ var socketHandlers = require('./socket-handlers');
 // Middleware
 var parser = require('body-parser');
 
+var port = process.env.PORT || 3000;
+
 // Set what we are listening on.
-app.set("port", 3000);
+app.set("port", port);
 
 // Logging and parsing
 app.use(parser.json());
@@ -53,7 +55,7 @@ io.on('connection', function (socket) {
     // update the opponent with this user's data
     // pass in anonymous function to be executed upon update completion
     socketHandlers.updateScore(socket, data, function () {
-      // save the result of checkForEndGame to see if it 
+      // save the result of checkForEndGame to see if it
       // is necessary to emit an update event
       socket.broadcast.emit('update', data);
       var endGameStatus = socketHandlers.checkForEndGame(socket);
@@ -61,7 +63,7 @@ io.on('connection', function (socket) {
     });
   });
 
-}); 
+});
 
 
 /*----------  Routes  ----------*/
