@@ -9,29 +9,85 @@
 <body>
   <script>
 
+  var idLibrary = {
+    ' ': '#path185',
+    'a': '#path65',
+    'b': '#path93',
+    'c': '#path91',
+    'd': '#path69',
+    'e': '#path45',
+    'f': '#path71',
+    'g': '#path73',
+    'h': '#path75',
+    'i': '#path55',
+    'j': '#path77',
+    'k': '#path79',
+    'l': '#path81',
+    'm': '#path97',
+    'n': '#path95',
+    'o': '#path57',
+    'p': '#path59',
+    'q': '#path41',
+    'r': '#path47',
+    's': '#path67',
+    't': '#path49',
+    'u': '#path53',
+    'v': '#path65',
+    'w': '#path43',
+    'x': '#path89',
+    'y': '#path51',
+    'z': '#path87',
+    'A': '#path65',
+    'B': '#path93',
+    'C': '#path91',
+    'D': '#path69',
+    'E': '#path45',
+    'F': '#path71',
+    'G': '#path73',
+    'H': '#path75',
+    'I': '#path55',
+    'J': '#path77',
+    'K': '#path79',
+    'L': '#path81',
+    'M': '#path97',
+    'N': '#path95',
+    'O': '#path57',
+    'P': '#path59',
+    'Q': '#path41',
+    'R': '#path47',
+    'S': '#path67',
+    'T': '#path49',
+    'U': '#path53',
+    'V': '#path65',
+    'W': '#path43',
+    'X': '#path89',
+    'Y': '#path51',
+    'Z': '#path87'
+  }
+
   //This is where I'm going to temporarily write my d3 code
       //note: in svg, path id# is the boxes. Numbers from 9-201
 
-  var type = function (path) {
-
+  var typeOnKey = function (letter) {
+    var path = idLibrary[letter];
+    d3.select('#keyboard')
+      .selectAll("g")
+      .select(path)
+      .style("fill", "#000000");
   }
 
-      d3.xml("https://upload.wikimedia.org/wikipedia/commons/3/3a/Qwerty.svg",
-        "image/svg+xml", function(xml) {
-          document.body.appendChild(xml.documentElement).setAttribute("id", "keyboard");
+  d3.xml("https://upload.wikimedia.org/wikipedia/commons/3/3a/Qwerty.svg",
+    "image/svg+xml", function(xml) {
+      document.body.appendChild(xml.documentElement).setAttribute("id", "keyboard");
 
-          d3.select('#keyboard')
-            .selectAll("g")
-            .select('#path11')
-            .style("fill", "#000000");
-            // .append('h2').html('~~~~~~~~~~~LAYER ONE SELECTED!~~~~~~~~~~~~');
-      });
+      typeOnKey('m');
+  });
 
-      //this works
-      d3.select('body').append('h1').html('Sample Text')
-        .on("mouseover", function(d){
-          d3.select(this).style("color", "blue");
-        });
+  //this works
+  d3.select('body').append('h1').html('Sample Text')
+    .on("mouseover", function(d){
+      d3.select(this).style("color", "blue");
+    });
 
       // //this works
       // var svgContainer = d3.select("body").append("svg")
