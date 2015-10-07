@@ -24,7 +24,8 @@
     "grunt-karma": "^0.8.3",
     "grunt-mocha": "^0.4.11",
     "karma": "^0.12.22",
-    "karma-coverage": "^0.2.6"
+    "karma-coverage": "^0.2.6",
+    "mongodb": "^2.0.45"
   },
   "dependencies": {
     "bcrypt-node": "^0.1.0",
