@@ -39,28 +39,44 @@ io.on('connection', function (socket) {
 
     console.log("\nSOCKET " + socket.id, "logged in.\n");
 
+    ///////////////////
+    // TEST USERNAME
+    // var data = {username : "balls"};
+    ////////////////////
+
     socketHandlers.loginUser(data, socket.id);
 
+    ////////////////////////
     // TEST JOIN GAME FUNCTION - REMOVE THIS WHEN JOIN GAME BUTTON IS ADDED
-    var opponentId = socketHandlers.joinGameOrWait(socket.id);
-    // If an opponent is found
-    if (opponentId) {
-      // Emit match event to tell players to start game
-      io.to(socket.id).emit('match');
-      io.to(opponentId).emit('match');
-      console.log("players now know they are matched");
-    }
+    // var opponentId = socketHandlers.joinGameOrWait(socket.id);
+    // // If an opponent is found
+    // if (opponentId) {
+    //   // Look up the usernames
+    //   var playerName = socketHandlers.users[socket.id].username;
+    //   var opponentName = socketHandlers.users[opponentId].username;
+    //   // Emit match event to tell players to start game
+    //   io.to(socket.id).emit('match', { opponentName : opponentName });
+    //   io.to(opponentId).emit('match', { opponentName : playerName });
+    //   console.log(playerName + " and " + opponentName +
+    //     " now know they are matched");
+    // }
+    //////////
+
   });
 
   // When user wants to join a game
-  socket.on('requestJoinGame', function() {
+  socket.on('requestJoinGame', function(data) {
     var opponentId = socketHandlers.joinGameOrWait(socket.id);
     // If an opponent is found
     if (opponentId) {
+      // Look up the usernames
+      var playerName = socketHandlers.users[socket.id].username;
+      var opponentName = socketHandlers.users[opponentId].username;
       // Emit match event to tell players to start game
-      io.to(socket.id).emit('match');
-      io.to(opponentId).emit('match');
-      console.log("players now know they are matched");
+      io.to(socket.id).emit('match', { opponentName : opponentName });
+      io.to(opponentId).emit('match', { opponentName : playerName });
+      console.log(playerName + " and " + opponentName +
+        " now know they are matched");
     }
   });
 

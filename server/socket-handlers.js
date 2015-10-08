@@ -2,14 +2,38 @@ var server = require('./server');
 
 /*----------  Server Cache  ----------*/
 
+
 exports.users = { count: 0 };
-var waiting = [];
+var waiting = []; // socket ids of all users waiting to play a game
+
+/* users object
+
+Contains all users who are currently logged in
+{
+  count: 2,
+  'hgCYB0Z-swGY4pwmAAAB':   // socket id
+    {
+      username: balls,
+      score: 15,
+      opponent: 'JtMFxG3tAiXwcl2DAAAC'   // null if not currently playing
+    },
+  'JtMFxG3tAiXwcl2DAAAC':
+    {
+      username: speedy,
+      score: 0,
+      opponent: 'hgCYB0Z-swGY4pwmAAAB'
+    }
+}
+
+*/
+
 
 /*----------  Handler Functions  ----------*/
 
 exports.loginUser = function (data, socketId) {
   // Save a new user to the server's users cache
-  exports.users[socketId] = { score: 0, opponent: null };
+  exports.users[socketId] =
+    { username: data.username, score: 0, opponent: null };
   exports.users.count++;
   console.log('This is the users object:\n', exports.users);
 };
@@ -17,6 +41,7 @@ exports.loginUser = function (data, socketId) {
 exports.joinGameOrWait = function (socketId) {
   // Check if opponent is available
   if (waiting.length > 0) {
+    // Get the opponent data
     var opponentId = waiting.shift();
     // Set the opponent of each player
     exports.users[socketId].opponent = opponentId;
@@ -34,7 +59,6 @@ exports.joinGameOrWait = function (socketId) {
 exports.updateScore = function (socketId, data) {
   // Update player's score
   exports.users[socketId].score = data.score;
-  // socket.userData.score = data.score;
   console.log('\n\n Server cache after socket update: \n', exports.users);
 };
 
@@ -62,7 +86,7 @@ exports.checkForEndGame = function (socketId, opponentId) {
 };
 
 exports.removePlayer = function (socketId, opponentId) {
-  // If user has an opponent
+  // If user has an opponent, cancel the association in users cache
   if (opponentId) {
     exports.users[opponentId].opponent = null;
   }
