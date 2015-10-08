@@ -6,19 +6,19 @@
 }
 
 .bar_letters {
-    display: inline-block;
-    width: 33px;
-    background-color: teal;
-    margin-left: 5px;
-    font-size: 32px;
-    border-radius: 0 0 10px 10px;
+  display: inline-block;
+  background-color: teal;
+  font-size: 200%;
+  border-radius: 0 0 10px 10px;
+  color: #eeeeee;
+  text-align: center;
 }
 
 .bar_nonLetters {
   display: inline-block;
-  width: 41px;
   background-color: teal;
-  margin-left: 5px;
-  font-size: 32px;
+  font-size: 200%;
   border-radius: 0 0 10px 10px;
+  color: #eeeeee;
+  text-align: center;
 }

@@ -2,12 +2,14 @@
 var BarGraphFeature = function () {
   // Heat map colors used for graph
   this.heatMapColors = {
+    // Color used when user gets 100% correct
     goodColor: {
       r: 0x00,
       g: 0x66,
       b: 0xff,
       color: '#0066ff'
     },
+    // Color used when user gets 0% correct
     badColor: {
       r: 0xcc,
       g: 0x00,
@@ -77,7 +79,9 @@ BarGraphFeature.prototype.initializeMockData = function () {
 // Filters mock data for only letters
 BarGraphFeature.prototype.filterMockData = function (filterStr) {
   // If the filter string is letters
-  var letters = filterStr === 'letters';
+  // filterStr should be 'letters' if looking for letters
+  // 'notLetters' if looking for all other characters
+  var letters = (filterStr === 'letters');
   // Resulting keys
   var result = [];
   // Get all of the letters
@@ -97,38 +101,46 @@ BarGraphFeature.prototype.filterMockData = function (filterStr) {
 
 // Initializes the bar graph for keypresses
 BarGraphFeature.prototype.initializeBarGraph = function () {
+  // Get reference to this, and it's dataset
   var that = this;
   var dataset = this.mockData;
 
-  // Visualize letters data
-  var datasetLetters = this.filterMockData('letters');
-  var parentBottom = Number(d3
-    .selectAll('#barGraphFeature_Letters')
-    .style('height').replace('px', '')) + window.innerHeight;
+  // Parent div parameters used for sizing
   var parentHeight = Number(d3
     .selectAll('#barGraphFeature_Letters')
     .style('height').replace('px', ''));
+  
+  // Get keys for all letters
+  var datasetLetters = this.filterMockData('letters');
+
+  // Visualize letters data
   d3.select('body #barGraphFeature_Letters').selectAll('div')
+    // Use letters data
     .data(datasetLetters)
     .enter()
+    // Add div
     .append('div')
+    // Add .bar_letters
     .attr('class', 'bar_letters')
+    // Heatmap background-color
     .style('background-color', function (d) {
       var totalPresses = dataset[d].badPresses
         + dataset[d].goodPresses;
+      // Avoid 0/0 in code after if statement
       if (!totalPresses) {
-        console.log('TP_Letter:', totalPresses);
         return that.heatMapColors.goodColor.color;
       }
       var badPresses
         = dataset[d].badPresses;
       return that.interpretToColor_Dynamic(badPresses/totalPresses);
     })
-    .style('color', '#eeeeee')
-    .style('text-align', 'center')
+    // Animate
     .transition()
     .duration(1000)
+    // Bars animate improperly without text value ...
+    // Whitespace doesn't work
     .text('_')
+    // Set height based on occurence
     .style('height', function (d) {
       var totalPresses = dataset[d].goodPresses
         + dataset[d].badPresses;
@@ -137,18 +149,42 @@ BarGraphFeature.prototype.initializeBarGraph = function () {
             * parentHeight;
       return barHeight + 'px';
     })
+    // Add text for each bar's associated key
+    // When finished with transition
     .each('end', function () {
       d3.select(this)
         .append('p')
+        // CSS magic to make text right-side up
         .text(function (d) {return d;})
         .style('transform', 'rotatex(180deg)')
         .style('-ms-transform', 'rotatex(180deg)')
         .style('-webkit-transform', 'rotatex(180deg)')
         .style('margin', '0px');
     });
-  
-  // Visualize non letters data
+
+  // Calculate individual bar widths and margin widths
+  var parentWidth = Number(d3
+    .select('body #barGraphFeature_Letters')
+    .style('width').replace('px', ''));
+
+  // Get percentage widths for this chart
+  var percentageWidths = this.getPercentageWidths({
+    totalWidth: parentWidth,
+    barCount: datasetLetters.length,
+    totalBarPercentage: .9,
+    totalMarginPercentage: .1
+  });
+
+  // Set margin left and right using jQuery
+  $('.bar_letters').css('width',
+    percentageWidths.oneBarWidth);
+  $('.bar_letters').css('margin',
+    percentageWidths.halfMarginWidth);
+
+  // Get keys for all non letters
   var datasetNonLetters = this.filterMockData('notLetters');
+
+  // Visualize non letters data (same as above, differnet data)
   d3.select('body #barGraphFeature_NonLetters').selectAll('div')
     .data(datasetNonLetters)
     .enter()
@@ -158,15 +194,12 @@ BarGraphFeature.prototype.initializeBarGraph = function () {
       var totalPresses = dataset[d].badPresses
         + dataset[d].goodPresses;
       if (!totalPresses) {
-        console.log('TP_NonLetter:', d, totalPresses);
         return that.heatMapColors.goodColor.color;
       }
       var badPresses
         = dataset[d].badPresses;
       return that.interpretToColor_Dynamic(badPresses/totalPresses);
     })
-    .style('color', '#eeeeee')
-    .style('text-align', 'center')
     .transition()
     .duration(1000)
     .text('_')
@@ -183,7 +216,7 @@ BarGraphFeature.prototype.initializeBarGraph = function () {
         .append('p')
         .text(function (d) {
           if (d === ' ') {
-            return '" "';
+            return '';
           } else {
             return d;
           }
@@ -193,11 +226,59 @@ BarGraphFeature.prototype.initializeBarGraph = function () {
         .style('-webkit-transform', 'rotatex(180deg)')
         .style('margin', '0px');
     });
+
+  // Calculate individual bar widths and margin widths
+  parentWidth = Number(d3
+    .select('body #barGraphFeature_NonLetters')
+    .style('width').replace('px', ''));
+
+  // Get percentage widths for this chart
+  percentageWidths = this.getPercentageWidths({
+    totalWidth: parentWidth,
+    barCount: datasetNonLetters.length,
+    totalBarPercentage: .9,
+    totalMarginPercentage: .1
+  });
+
+  // Set margin left and right using jQuery
+  $('.bar_nonLetters').css('width',
+    percentageWidths.oneBarWidth);
+  $('.bar_nonLetters').css('margin',
+    percentageWidths.halfMarginWidth);
+};
+
+// A function that calculates the % widths and margins
+// for the bars
+BarGraphFeature.prototype.getPercentageWidths = function (data) {
+  // Assign parameters
+  var totalWidth = data.totalWidth;
+  var barCount = data.barCount;
+  var totalBarPercentage = data.totalBarPercentage;
+  var totalMarginPercentage = data.totalMarginPercentage;
+
+  // Width for bars (percentage of containing div)
+  var totalBarWidth = totalWidth * totalBarPercentage;
+  var oneBarWidth = 100 * (totalBarWidth / barCount) / totalWidth;
+  oneBarWidth = '' + oneBarWidth + '%';
+
+  // Width for margins (1/2 left, 1/2 right)
+  // (percentage of containing div)
+  var totalMarginWidth = totalWidth * totalMarginPercentage;
+  var halfMarginWidth
+    = 100 * (totalMarginWidth / (2 * barCount)) / totalWidth;
+  halfMarginWidth = '' + halfMarginWidth + '%';
+
+  // Return result
+  return {
+    oneBarWidth: oneBarWidth,
+    halfMarginWidth: halfMarginWidth
+  };
 };
 
 // Interprets a ratio to a fixed range of colors
-// (red, blue)
+// (red === 0% correct, blue === 100% correct)
 BarGraphFeature.prototype.interpretToColor = function (ratio) {
+  // Binary magic
   var colorRatio = 0xff * ratio;
   var redHex = Math.round(colorRatio) << 16;
   var blueHex = Math.round(0xff - colorRatio);
@@ -265,22 +346,26 @@ BarGraphFeature.prototype.interpretToHeight = function (count) {
 
 // Reanimates all bar graph heights
 BarGraphFeature.prototype.reanimateHeights = function () {
+  // Reference to this and the required dataset
   var that = this;
   var dataset = this.mockData;
-  var parentBottom = Number(d3
-    .selectAll('#barGraphFeature_Letters')
-    .style('height').replace('px', '')) + window.innerHeight;
+
+  // Parent height
   var parentHeight = Number(d3
     .selectAll('#barGraphFeature_Letters')
     .style('height').replace('px', ''));
 
   // Visualize letters data
   var datasetLetters = this.filterMockData('letters');
+  // Select all .bar_letters
   d3.select('body')
     .selectAll('#barGraphFeature_Letters .bar_letters')
+    // Assign data
     .data(datasetLetters)
+    // Animate
     .transition()
     .duration(1000)
+    // Calculate height based off of occurence
     .style('height', function (d) {
       var totalPresses = dataset[d].goodPresses
         + dataset[d].badPresses;
@@ -289,9 +374,11 @@ BarGraphFeature.prototype.reanimateHeights = function () {
             * parentHeight;
       return barHeight + 'px';
     })
+    // Heatmap background-color
     .style('background-color', function (d) {
       var totalPresses = dataset[d].badPresses
         + dataset[d].goodPresses;
+      // Avoid 0/0 in following code after if block
       if (!totalPresses) {
         return that.heatMapColors.goodColor.color;
       }
@@ -300,7 +387,7 @@ BarGraphFeature.prototype.reanimateHeights = function () {
       return that.interpretToColor_Dynamic(badPresses/totalPresses);
     });
 
-  // Visualize non letters data
+  // Visualize non letters data (same as above, different data)
   var datasetNonLetters = this.filterMockData('notLetters');
   d3.select('body')
     .selectAll('#barGraphFeature_NonLetters .bar_nonLetters')
@@ -329,9 +416,13 @@ BarGraphFeature.prototype.reanimateHeights = function () {
 
 // Updates mockData[key]'s press variables based on boolean
 BarGraphFeature.prototype.addOneKeypressStat = function (key, bool) {
+  // If the user was supposed to press 'key' and did
+    // Increment good presses
+  // Otherwise, the user was supposed to press 'key' and did not
+    // Increment bad presses
   bool ? this.mockData[key].goodPresses++
     : this.mockData[key].badPresses++;
-  // Re animate
+  // Re animate heatmaps and heights
   this.reanimateHeights();
 };
 
