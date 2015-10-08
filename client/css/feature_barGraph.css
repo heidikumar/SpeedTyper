@@ -1,0 +1,24 @@
+.feature_barGraph_bar {
+  width: 15px;
+  float: left;
+  text-align: center;
+  position: relative;
+}
+
+.bar_letters {
+    display: inline-block;
+    width: 33px;
+    background-color: teal;
+    margin-left: 5px;
+    font-size: 32px;
+    border-radius: 0 0 10px 10px;
+}
+
+.bar_nonLetters {
+  display: inline-block;
+  width: 41px;
+  background-color: teal;
+  margin-left: 5px;
+  font-size: 32px;
+  border-radius: 0 0 10px 10px;
+}
