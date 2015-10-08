@@ -1,6 +1,6 @@
 <!DOCTYPE html>
   <html>
-    <head>  
+    <head>
       <!-- <link rel="stylesheet" type="text/css" href="css/styles.css" /> -->
       <link rel="stylesheet" type="text/css" href="css/styles.min.css" />
     </head>
@@ -9,12 +9,13 @@
       <script src="./bower_components/underscore/underscore-min.js"></script>
       <script src="./bower_components/backbone/backbone-min.js"></script>
       <script src="./bower_components/d3/d3.min.js"></script>
-      <script src="./bower_components/socket.io-client/socket.io.js"></script> 
+      <script src="./bower_components/socket.io-client/socket.io.js"></script>
       <!-- <script src="./bower_components/bootstrap/dist/bootstrap.min.css"></script>
       <script src="./bower_components/bootstrap/dist/fonts/glyphicons-halflings-regular.svg"></script>
       <script src="./bower_components/bootstrap/js/boostrap.min.js"></script> -->
 
       <script src="./d3/raceVisuals.js"></script>
+      <script src="./d3/keyboard.js"></script>
       <script src="models/AppModel.js"></script>
       <script src="models/GameDisplayModel.js"></script>
       <script src="models/SpeedTyperModel.js"></script>
@@ -27,11 +28,11 @@
       <script src="views/GameContainerView.js"></script>
       <script src="views/SpeedTyperView.js"></script>
 
-      <script src="./lib/lib.js"></script>
-      <script src="./scripts/game.js"></script>
+      <!---<script src="./lib/lib.js"></script>
+      <script src="./scripts/game.js"></script>-->
 
 
-      <script>  
+      <script>
        $(function() {
           var app = new AppModel();
           var appView = new AppView({model: app});
