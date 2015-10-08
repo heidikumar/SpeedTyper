@@ -6,9 +6,20 @@ var AppView = Backbone.View.extend({
     /*
     * Initialize creates the two main container views
     */
-    this.gameContainerView = new GameContainerView({model: this.model.get('speedTyper')});
-    this.speedTyperView = new SpeedTyperView({model: this.model.get('speedTyper')});
-    this.keyboardView = new KeyboardView({model: this.model.get('keyboard')})
+    this.gameContainerView = new GameContainerView({
+      model: this.model.get('speedTyper')
+    });
+    this.speedTyperView = new SpeedTyperView({
+      model: this.model.get('speedTyper')
+    });
+    this.keyboardView = new KeyboardView({
+      model: this.model.get('keyboard')
+    });
+    // Bar Graph View
+    this.keyPress_BarGraphView = new KeyPress_BarGraphView({
+      model: this.model.get('keyPressModel'),
+      domID: '#barGraphView'
+    });
   },
 
   render: function(){
