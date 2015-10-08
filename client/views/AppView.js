@@ -1,5 +1,5 @@
 var AppView = Backbone.View.extend({
-  
+
   className: 'container',
 
   initialize: function(params) {
@@ -8,13 +8,12 @@ var AppView = Backbone.View.extend({
     */
     this.gameContainerView = new GameContainerView({model: this.model.get('speedTyper')});
     this.speedTyperView = new SpeedTyperView({model: this.model.get('speedTyper')});
-
-
+    this.keyboardView = new KeyboardView({model: this.model.get('keyboard')})
   },
 
   render: function(){
     /*
-    * render appends the html from speedTyperView and gameContainerView. 
+    * render appends the html from speedTyperView and gameContainerView.
     * Called in index.html.
     */
     this.model.get('speedTyper').get('socket').emit('login');
