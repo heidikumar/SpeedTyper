@@ -1,0 +1,65 @@
+.barGraphView_Graph {
+  width: 100%;
+  height: 250px;
+  font-size: 100%;
+  transform: rotatex(180deg);
+  -ms-transform: rotatex(180deg);
+  -webkist-transform: rotatex(180deg);
+}
+
+#barGraphView_Graph_Letters {
+  background-color: #111111;
+}
+
+.barGraphView_Graph_Letters_GraphBar {
+
+}
+
+.barGraphView_Graph_Bar {
+  display: inline-block;
+  background-color: teal;
+  font-size: 100%;
+  border-radius: 0 0 10px 10px;
+  color: #eeeeee;
+  text-align: center;
+}
+
+.barGraphView_Graph_Bar > p {
+  transform: rotatex(180deg);
+  -ms-transform: rotatex(180deg);
+  -webkist-transform: rotatex(180deg);
+  margin: 0;
+}
+
+.barGraphView_Graph_NonLetters_GraphBar {
+
+}
+
+#barGraphView_Graph_NonLetters {
+  background-color: #aaaaaa;
+}
+
+.feature_barGraph_bar {
+  width: 15px;
+  float: left;
+  text-align: center;
+  position: relative;
+}
+
+.bar_letters {
+  display: inline-block;
+  background-color: teal;
+  font-size: 200%;
+  border-radius: 0 0 10px 10px;
+  color: #eeeeee;
+  text-align: center;
+}
+
+.bar_nonLetters {
+  display: inline-block;
+  background-color: teal;
+  font-size: 200%;
+  border-radius: 0 0 10px 10px;
+  color: #eeeeee;
+  text-align: center;
+}

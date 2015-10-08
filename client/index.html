@@ -3,9 +3,10 @@
     <head>
       <!-- <link rel="stylesheet" type="text/css" href="css/styles.css" /> -->
       <link rel="stylesheet" type="text/css" href="css/styles.min.css" />
-      <!-- feature_barGraph styles -->
-      <link rel="stylesheet" type="text/css"
-        href="css/feature_barGraph.css">
+      
+      <!-- KeyPress_BarGraphView -->
+      <link rel='stylesheet' type='text/css'
+        href='css/KeyPress_BarGraphView.css' />
     </head>
     <body>
       <script src="./bower_components/jquery/jquery.min.js"></script>
@@ -21,6 +22,8 @@
       <script src="models/AppModel.js"></script>
       <script src="models/GameDisplayModel.js"></script>
       <script src="models/SpeedTyperModel.js"></script>
+      <script src='models/KeyboardModel.js'></script>
+      <script src='models/KeyPressModel.js'></script>
 
       <script src="views/AppView.js"></script>
       <script src="views/StatsView.js"></script>
@@ -29,6 +32,9 @@
       <script src="views/GameDisplayView.js"></script>
       <script src="views/GameContainerView.js"></script>
       <script src="views/SpeedTyperView.js"></script>
+      <script src='views/KeyboardView.js'></script>
+      <script src='views/KeyPress_BarGraphView.js'>
+      </script>
 
       <script src="./lib/lib.js"></script>
       <script src="./scripts/game.js"></script>
@@ -41,11 +47,6 @@
           $('body').append(appView.render());
        })
       </script>
-
-      <!-- Bar Graph Feature -->
-      <script src='./d3/barGraphFeature/barGraphFeature.js'>
-      </script>
-
 
     </body>
   </html>
