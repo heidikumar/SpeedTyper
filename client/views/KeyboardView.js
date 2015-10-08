@@ -44,20 +44,21 @@ var KeyboardView = Backbone.View.extend({
         "#g821", "#g825"];
 
       var fill = "#97c5d5";
-      $("body").on('keypress', '#input_bar', function(event){
+
+      $("body").on('keypress', '#input_bar', function (event) {
         var keyCode = event.keyCode;
         var letter = String.fromCharCode(keyCode);
         that.typeOnKey(letter, "#d3d3d3");
       });
 
-      $("body").on('keyup', '#input_bar', function(event){
+      $("body").on('keyup', '#input_bar', function (event) {
         var keyCode = event.keyCode;
         var letter = String.fromCharCode(keyCode);
         that.typeOnKey(letter, "#97c5d5");    //binding error: this is reset within function.
       });
 
       //clearing out the colors from the legend
-      for (var i=0; i<toClearOut.length; i++){
+      for (var i=0; i<toClearOut.length; i++) {
         d3.select('#keyboard')
           .selectAll("g")
           .select(toClearOut[i])
@@ -65,7 +66,7 @@ var KeyboardView = Backbone.View.extend({
       };
 
       //clearing out the text from the legend
-      for (var j=0; j<textToClear.length; j++){
+      for (var j=0; j<textToClear.length; j++) {
         d3.select('#keyboard')
           .selectAll("g")
           .selectAll(textToClear[j])
