@@ -86,7 +86,7 @@ var KeyboardView = Backbone.View.extend({
     return result;
   },
 
-  interpretToColor_Dynamic = function (ratio) {
+  interpretToColor_Dynamic : function (ratio) {
     // Get colors from heatmap
     var goodColor = this.heatMapColors.goodColor;
     var badColor = this.heatMapColors.badColor;
