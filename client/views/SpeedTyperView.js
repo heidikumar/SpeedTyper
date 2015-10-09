@@ -44,7 +44,7 @@ var SpeedTyperView = Backbone.View.extend({
     this.lineNum =0;
     this.animating = false;
     this.top = 0;
-    $(document).on('keydown', this.keyDownEventHandler.bind(this) );
+    $('#input_bar').on('keydown', this.keyDownEventHandler.bind(this) );
     $('#input_bar').focus();
   },
 
@@ -61,6 +61,7 @@ var SpeedTyperView = Backbone.View.extend({
     $hiddenInput.blur(function () {
       $hiddenInput.focus();
     });
+    $('#appContainer').append($('<h3/>', {id:'warning', class:'hide'}).text('You misspelled a word. Go back!'));
   }, 
 
   keyDownEventHandler: function (e) {
@@ -104,9 +105,17 @@ var SpeedTyperView = Backbone.View.extend({
     this.currentCharIdx++;
     this.allChars.models[this.currentCharIdx].set('isCurrent', true);
     currentCharModel.set('isCurrent', false);
+
+    if(!this.words[this.currentWordIdx].get('chars').some(function(char){ 
+          return char.get('isCurrent'); 
+        })
+      ){
+        $('#warning').removeClass().addClass('warn');
+      }
     this.$('#input_bar').focus();
   },
   setNextWord: function (word) {
+    $('#warning').removeClass().addClass('hide');
     console.log('next');
     this.stopListening();
     this.currentWordIdx++;
@@ -124,6 +133,7 @@ var SpeedTyperView = Backbone.View.extend({
     }
   },
   decrementCurrentWord: function (word) {
+    $('#warning').removeClass().addClass('hide');
     console.log('dec')
     this.stopListening();
 

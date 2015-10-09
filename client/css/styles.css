@@ -145,3 +145,12 @@ body {
   margin-bottom: 10px;
   text-decoration: none;
 }
+.hide {
+  opacity: 0;
+}
+.warn {
+  opacity: 1;
+}
+#warning {
+  color: red;
+}

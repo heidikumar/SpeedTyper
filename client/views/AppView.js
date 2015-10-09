@@ -106,7 +106,8 @@ var AppView = Backbone.View.extend({
     var wpm = Math.round(this.calculateWPM(this.startTime, Date.now(), this.playerScore));
 
     this.stopListening();
-    $('document').off('keydown');
+    $('#input_bar').off('keydown');
+    $('#input_bar').remove();
     $('body').animate({opacity: 0}, (function () {
 
     this.$el.empty();
@@ -134,7 +135,10 @@ var AppView = Backbone.View.extend({
     var wpm = Math.round(this.calculateWPM(this.startTime, Date.now(), this.playerScore));
 
     this.stopListening();
-    $(document).off('keydown');
+    $('#input_bar').off('keydown');
+    $('#input_bar').remove();
+    $('#input_bar').off('keydown');
+    
     $('body').animate({opacity: 0}, (function () {
 
     this.$el.empty();
@@ -160,7 +164,7 @@ var AppView = Backbone.View.extend({
   newGame: function () {
     $('#bargraph').remove();
     this.graph.remove();
-    $('body').empty();
+    //$('body').empty();
     this.renderJoinScreen();
   },
   calculateWPM: function (startTime, endTime, words){
