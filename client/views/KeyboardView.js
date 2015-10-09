@@ -10,7 +10,7 @@ var KeyboardView = Backbone.View.extend({
       'e': '#path45','f': '#path71','g': '#path73','h': '#path75','i': '#path55',
       'j': '#path77','k': '#path79','l': '#path81','m': '#path97','n': '#path95',
       'o': '#path57','p': '#path59','q': '#path41','r': '#path47','s': '#path67',
-      't': '#path53','u': '#path195','v': '#path65','w': '#path43','x': '#path89',
+      't': '#path49','u': '#path53','v': '#path195','w': '#path43','x': '#path89',
       'y': '#path51','z': '#path87','A': '#path65','B': '#path93','C': '#path91',
       'D': '#path69','E': '#path45','F': '#path71','G': '#path73','H': '#path75',
       'I': '#path55','J': '#path77','K': '#path79','L': '#path81','M': '#path97',
@@ -66,10 +66,10 @@ var KeyboardView = Backbone.View.extend({
     this.options = _.extend({}, this.defaults, this.options);
     this.mock = this.initializeMockData();
 
-    this.model.on('updateOneKeyPress', '#input_bar', function(key) {
+    this.model.on('updateOneKeyPress', function(key) {
       //find ratio first
-      var ratio = this.calculateRatio(this.model.keyPressData.key.goodPresses,
-        this.model.keyPressData.key.badPresses);
+      var ratio = this.calculateRatio(this.model.get('keyPressData')[key].goodPresses,
+        this.model.get('keyPressData')[key].badPresses);
       //then change key color
       this.typeOnKey(key, ratio);
     }, this);
@@ -93,17 +93,17 @@ var KeyboardView = Backbone.View.extend({
 
       //I don't need this, but I'm not deleting it until testing is complete.
 
-      $("body").on('keypress', '#input_bar', function (event) {
-        var keyCode = event.keyCode;
-        var letter = String.fromCharCode(keyCode);
-        that.typeOnKey(letter, "#d3d3d3");
-      });
+      // $("body").on('keypress', '#input_bar', function (event) {
+      //   var keyCode = event.keyCode;
+      //   var letter = String.fromCharCode(keyCode);
+      //   that.typeOnKey(letter, "#d3d3d3");
+      // });
 
-      $("body").on('keyup', '#input_bar', function (event) {
-        var keyCode = event.keyCode;
-        var letter = String.fromCharCode(keyCode);
-        that.typeOnKey(letter, "#97c5d5");    //binding error: this is reset within function.
-      });
+      // $("body").on('keyup', '#input_bar', function (event) {
+      //   var keyCode = event.keyCode;
+      //   var letter = String.fromCharCode(keyCode);
+      //   that.typeOnKey(letter, "#97c5d5");    //binding error: this is reset within function.
+      // });
 
       //clearing out the colors from the legend
       that.modifyKeyboardColor(that.defaults.legendClearOut, "#FFFFFF");
@@ -178,12 +178,12 @@ var KeyboardView = Backbone.View.extend({
     return bad/total;
   },
 
-  typeOnKey : function (letter, color) {
+  typeOnKey : function (letter, ratio) {
     var path = this.defaults.keyboardPathLibrary;
     path = path[letter];
 
     //use letter to fetch ratio of correct/total
-    var ratio = this.calculateRatio(this.mock[letter].goodPresses, this.mock[letter].badPresses);
+    //var ratio = this.calculateRatio(this.mock[letter].goodPresses, this.mock[letter].badPresses);
     //calculate color using interpretToColor(ratio)
     var color = this.model.interpretToColor_Dynamic(ratio);
 

@@ -8,6 +8,7 @@ var SpeedTyperView = Backbone.View.extend({
   id: "textContainer",
 
   initialize: function ( params ) {
+    this.keyModel = params.keyModel;
     window.animatingScroll = false;
     //window.topPos;
     window.scrolled = false;
@@ -53,11 +54,13 @@ var SpeedTyperView = Backbone.View.extend({
       $speedTyper.append(new WordView({model: word}).$el);
     });
     this.$el.append($speedTyper);
+
     var $hiddenInput = $('<input>', {type:'text', class: 'hidden', id: 'input_bar'});
-    this.$el.parent().append($hiddenInput);
+    $('#appContainer').append($hiddenInput);
     $hiddenInput.blur(function () {
       $hiddenInput.focus();
     });
+    
     return this.$el;
   }, 
 
@@ -88,11 +91,15 @@ var SpeedTyperView = Backbone.View.extend({
     //     correct: checkCorrect(key)
     //   };
     c = convertKeydownToChar(c, e);
+    if(typeof c === 'number') { return; }
+
     if(c === currChar){
       currentCharModel.set('correct', true);
+      this.keyModel.updateOneKeyPress(currChar, true);
     } else {
       currentCharModel.set('correct', false);
       currentCharModel.set('dirty', true);
+      this.keyModel.updateOneKeyPress(currChar, false);
     }
     if (this.currentCharIdx === this.allChars.length-1) { return; }
     this.currentCharIdx++;

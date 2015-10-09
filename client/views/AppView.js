@@ -59,9 +59,12 @@ var AppView = Backbone.View.extend({
     console.log('FoundGame!');
     $('h3').remove();
     this.$el.append($('<h3>Starting Game</h3>').addClass('subHeading'));
+
     this.playerScore = 0;
     this.opponentScore = 0;
     this.opponentName = data.opponentName;
+
+    this.keyPressModel = new KeyPressModel;
     this.fetchText();
   },
   fetchText: function() {
@@ -80,8 +83,11 @@ var AppView = Backbone.View.extend({
     this.game.initialize();
     this.game.render(0,0);
 
-    this.gameView = new SpeedTyperView({text: text});
+    this.gameView = new SpeedTyperView({text: text, keyModel: this.keyPressModel});
     this.$el.append(this.gameView.$el);
+
+    //var graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'});
+    var keyboard = new KeyboardView({model: this.keyPressModel});
 
     this.listenTo(this.gameView, 'correctWord', this.updatePlayerScore);
   },
@@ -96,10 +102,16 @@ var AppView = Backbone.View.extend({
     this.game.render(this.playerScore, this.opponentScore);
   },
   gameWin: function () {
-
+    this.$el.empty();
+    $('#keyboard').remove();
+    this.$el.append($('<h1>You Win!</h1>').addClass(''));
+    var graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'}).reanimateBarGraphs();
   },
   gameLose: function () {
-
+    this.$el.empty();
+    $('#keyboard').remove();
+    this.$el.append($('<h1>You Lose!</h1>').addClass(''));
+    var graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'}).reanimateBarGraphs();
   },
   renderStats: function () {
 

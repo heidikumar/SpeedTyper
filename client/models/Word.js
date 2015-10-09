@@ -10,7 +10,6 @@ var Word = Backbone.Model.extend({
     this.listenTo(this.get('chars'), 'add', this.updateListeners);
   },
   checkWordCorrectness: function (lastChar, isCharCurrent) {
-    console.log('Checkcorrect');
     if(isCharCurrent) {
       return;
     }
@@ -18,7 +17,6 @@ var Word = Backbone.Model.extend({
       return;
     }
     if(this.get('chars').every(correct)){
-      console.log('correct');
       this.trigger('correct', this);
     }
 
@@ -28,7 +26,6 @@ var Word = Backbone.Model.extend({
   },
   checkIfCurrent: function () {
     if(this.get('chars').every(notCurrent) && this.get('isCurrentWord') ){
-      console.log('not current')
       //this.set('inFocus', false);
       this.trigger('decrementCurrentWord', this);
     }
