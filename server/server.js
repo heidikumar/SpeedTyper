@@ -48,6 +48,14 @@ io.on('connection', function (socket) {
 
     ////////////////////////
     // TEST JOIN GAME FUNCTION - REMOVE THIS WHEN JOIN GAME BUTTON IS ADDED
+    // socketHandlers.waitForGame(socket.id);
+    //////////
+
+  });
+
+  // When user wants to join a game
+  socket.on('requestJoinGame', function() {
+    socketHandlers.waitForGame(socket.id);
     // var opponentId = socketHandlers.joinGameOrWait(socket.id);
     // // If an opponent is found
     // if (opponentId) {
@@ -60,24 +68,6 @@ io.on('connection', function (socket) {
     //   console.log(playerName + " and " + opponentName +
     //     " now know they are matched");
     // }
-    //////////
-
-  });
-
-  // When user wants to join a game
-  socket.on('requestJoinGame', function(data) {
-    var opponentId = socketHandlers.joinGameOrWait(socket.id);
-    // If an opponent is found
-    if (opponentId) {
-      // Look up the usernames
-      var playerName = socketHandlers.users[socket.id].username;
-      var opponentName = socketHandlers.users[opponentId].username;
-      // Emit match event to tell players to start game
-      io.to(socket.id).emit('match', { opponentName : opponentName });
-      io.to(opponentId).emit('match', { opponentName : playerName });
-      console.log(playerName + " and " + opponentName +
-        " now know they are matched");
-    }
   });
 
   // When player updates server with score
@@ -112,6 +102,32 @@ io.on('connection', function (socket) {
     console.log("\nSOCKET " + socket.id, "disconnected.");
   });
 });
+
+// Match players every 5 seconds
+setInterval(function () {
+  var matches = socketHandlers.matchPlayers();
+  /*
+    matches = [
+      ['dfdfdvs323f', 'dfsdfsv32324'],
+      [ 'fs34324243', 'dfsfsfdss234']
+    ]
+  */
+  // If matches are made
+  if (matches.length > 0) {
+    for (var i = 0; i < matches.length; i++) {
+      var player1Id = matches[i][0];
+      var player2Id = matches[i][1];
+      // Look up player names
+      var player1Name = socketHandlers.users[player1Id].username;
+      var player2Name = socketHandlers.users[player2Id].username;
+
+      // Emit match event to tell players to start game
+      io.to(player1Id).emit('match', { opponentName : player2Name });
+      io.to(player2Id).emit('match', { opponentName : player1Name });
+      console.log(player1Name + " and " + player2Name + " told they're matched");
+    }
+  }
+}, 5000);
 
 /*----------  Routes  ----------*/
 
