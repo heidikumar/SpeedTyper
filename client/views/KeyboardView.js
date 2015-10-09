@@ -66,6 +66,14 @@ var KeyboardView = Backbone.View.extend({
     this.options = _.extend({}, this.defaults, this.options);
     this.mock = this.initializeMockData();
 
+    this.model.on('updateOneKeyPress', function(key) {
+      //find ratio first
+      var ratio = this.calculateRatio(this.model.keyPressData.key.goodPresses,
+        this.model.keyPressData.key.badPresses);
+      //then change key color
+      this.typeOnKey(key, ratio);
+    }, this);
+
     var keyboardFull = d3.xml("https://upload.wikimedia.org/wikipedia/commons/3/3a/Qwerty.svg",
       "image/svg+xml", function(xml) {
         that.makeKeyboard(xml);
@@ -80,8 +88,6 @@ var KeyboardView = Backbone.View.extend({
       document.body
       .appendChild(xml.documentElement)
       .setAttribute("id", "keyboard");
-
-
 
       var fill = "#97c5d5";
 
@@ -148,52 +154,6 @@ var KeyboardView = Backbone.View.extend({
     return result;
   },
 
-  interpretToColor_Dynamic : function (ratio) {
-    // Get colors from heatmap
-    var goodColor = this.heatMapColors.goodColor;
-    var badColor = this.heatMapColors.badColor;
-
-    // Get red difference
-    var redVal = goodColor.r;
-    var redDiff = Math.abs(badColor.r - goodColor.r) * ratio;
-    if (goodColor.r < badColor.r) {
-      redVal += redDiff;
-    } else {
-      // badColor.r <= goodColor.r
-      redVal -= redDiff;
-    }
-
-    // Get green difference
-    var greenVal = goodColor.g;
-    var greenDiff = Math.abs(badColor.g - goodColor.g) * ratio;
-    if (goodColor.g < badColor.g) {
-      greenVal += greenDiff;
-    } else {
-      // badColor.g <= goodColor.g
-      greenVal -= greenDiff;
-    }
-
-    // Get blue difference
-    var blueVal = goodColor.b;
-    var blueDiff = Math.abs(badColor.b - goodColor.b) * ratio;
-    if (goodColor.b < badColor.b) {
-      blueVal += blueDiff;
-    } else {
-      // badColor.b <= goodColor.b
-      blueVal -= blueDiff;
-    }
-
-    // Get result as string in CSS hex format
-    var result = ''
-      + (Math.round((redVal << 16) + (greenVal << 8) + blueVal)).toString(16);
-    // Pad with preceding 0s
-    while (result.length < 6) {
-      result = '0' + result;
-    }
-    // Add # for css style string
-    result = '#' + result;
-    return result;
-  },
 
   initializeMockData : function () {
     var mockData = {};
@@ -223,7 +183,7 @@ var KeyboardView = Backbone.View.extend({
     //use letter to fetch ratio of correct/total
     var ratio = this.calculateRatio(this.mock[letter].goodPresses, this.mock[letter].badPresses);
     //calculate color using interpretToColor(ratio)
-    var color = this.interpretToColor(ratio);
+    var color = this.model.interpretToColor_Dynamic(ratio);
 
     d3.select('#keyboard')
       .selectAll("g")
