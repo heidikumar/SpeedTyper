@@ -18,6 +18,8 @@ var KeyPress_BarGraphView = Backbone.View.extend({
       '#barGraphView_Graph_Letters',
       '#barGraphView_Graph_NonLetters'
     ];
+    // Graph titles
+    this.graphTitles = ['Letters', 'Non-Letters'];
     // Set bar classes
     this.graphBarClasses = [
       '.barGraphView_Graph_Letters_GraphBar',
@@ -50,7 +52,7 @@ var KeyPress_BarGraphView = Backbone.View.extend({
     }, 1100);*/
 
     // Randomly generate individual key presses
-    this.model.simulateKeyPresses(20, .8);
+    this.model.simulateKeyPresses(10, .5);
   },
 
   // Makes filters for data for letters and ~letters
@@ -86,7 +88,14 @@ var KeyPress_BarGraphView = Backbone.View.extend({
     // Make initial element
     d3.select('body')
       .append(this.tagName)
-      .attr('id', this.domID.replace('#', ''));
+      .attr('id', this.domID.replace('#', ''))
+      .style('text-align', 'center')
+      .style('color', 'black')
+      .style('border', '5px solid black')
+      .style('border-radius', '.5em')
+      .style('margin-top', '20px')
+      .append('h2')
+      .text('Keyboard Accuracy Graph');
 
     // Iterate over graph ids
     var graphIDs = this.graphIDs;
@@ -285,7 +294,7 @@ var KeyPress_BarGraphView = Backbone.View.extend({
         var totalPresses = keyPressData[key].goodPresses
           + keyPressData[key].badPresses;
         var barHeight
-          = (keyPressData[key].goodPresses/totalPresses * .7 + .3)
+          = (keyPressData[key].goodPresses/totalPresses * .6 + .3)
             * containerHeight;
         return barHeight + 'px';
       })

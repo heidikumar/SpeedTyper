@@ -139,5 +139,44 @@ var KeyPressModel = Backbone.Model.extend({
         = Math.random() < accuracy;
       that.updateOneKeyPress(randomChar, randomBool);
     }, rate);
-  }
+  },
+
+  // Randomly generates 2 new random colors for
+  // good color and bad color
+  /*randomizeBarColors: function () {
+    // New colors array
+    var newColors = [];
+    for (var i = 0; i < 2; ++i) {
+      var newColor = Math.round(Math.random() * 0xffffff)
+        .toString(16);
+      // Pad left with 0s
+      while (newColor.length < 6) {
+        newColor = 0 + newColor;
+      }
+      newColors.push(newColor);
+    }
+    console.log(newColors);
+    // Assign colors
+    this.get('heatMapColors').goodColor.color
+      = '#' + newColors[0]
+    this.get('heatMapColors').badColor.color
+      = '#' + newColors[1];
+
+    // Set RGBs
+    var rgbAtts = ['r', 'g', 'b'];
+    var colorRefs = [
+      this.get('heatMapColors').goodColor,
+      this.get('heatMapColors').badColor
+    ];
+    // Iterate over colors
+    for (var i = 0; i < colorRefs.length; ++i) {
+      // Iterate over components
+      for (var j = 0; j < rgbAtts.length; ++j) {
+        // Assign attribute
+        colorRefs[i][rgbAtts[j]]
+          = parseInt(newColors[i].substr(2 * j, 2), 16);
+        console.log(newColors[i].substr(2 * j, 2));
+      }
+    }
+  }*/
 });
