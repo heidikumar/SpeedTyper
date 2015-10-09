@@ -308,7 +308,7 @@ var KeyPress_BarGraphView = Backbone.View.extend({
           var totalPresses = keyPressData[d].goodPresses
             + keyPressData[d].badPresses;
           var barHeight
-            = (keyPressData[d].goodPresses/totalPresses * .7 + .3)
+            = (keyPressData[d].goodPresses/totalPresses * .6 + .3)
               * containerHeight;
           return barHeight + 'px';
         })
