@@ -52,7 +52,7 @@ var KeyPress_BarGraphView = Backbone.View.extend({
     }, 1100);*/
 
     // Randomly generate individual key presses
-    this.model.simulateKeyPresses(10, .5);
+    // this.model.simulateKeyPresses(10, .5);
   },
 
   // Makes filters for data for letters and ~letters
@@ -98,7 +98,7 @@ var KeyPress_BarGraphView = Backbone.View.extend({
       .style('margin-left', '25%')
       // Append title
       .append('h2')
-      .text('Keyboard Accuracy Graph')
+      .text('Keyboard Accuracy Graph');
     
     // Append scale text
     var scaleVars = ['Poor', 'Good'];
