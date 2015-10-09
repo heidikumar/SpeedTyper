@@ -87,9 +87,10 @@ var AppView = Backbone.View.extend({
     this.$el.append(this.gameView.$el);
 
     //var graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'});
-    var keyboard = new KeyboardView({model: this.keyPressModel});
+    this.keyboard = new KeyboardView({model: this.keyPressModel});
 
     this.listenTo(this.gameView, 'correctWord', this.updatePlayerScore);
+    this.startTime = Date.now();
   },
   updatePlayerScore: function () {
     console.log('updateScore')
@@ -102,18 +103,67 @@ var AppView = Backbone.View.extend({
     this.game.render(this.playerScore, this.opponentScore);
   },
   gameWin: function () {
+    var wpm = Math.round(this.calculateWPM(this.startTime, Date.now(), this.playerScore));
+
+    this.stopListening();
+    $('document').off('keydown');
+    $('body').animate({opacity: 0}, (function () {
+
     this.$el.empty();
     $('#keyboard').remove();
-    this.$el.append($('<h1>You Win!</h1>').addClass(''));
-    var graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'}).reanimateBarGraphs();
+    this.keyboard.remove();
+    this.gameView.remove();
+
+    this.$el.append($('<h1>You Win!</h1>').addClass('end'));
+    this.graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'});
+    this.graph.reanimateBarGraphs();
+
+    this.$el.append($('<h3>WPM: ' + wpm + '</h3>').addClass('score'));
+
+    var $btn = $('<button>New Game</button>').addClass('end-btn');
+    this.$el.append($btn);
+    $btn.click(this.newGame.bind(this));
+
+
+    $('body').css({opacity: 0});
+    $('body').animate({opacity: 1});
+
+    }).bind(this));
   },
   gameLose: function () {
+    var wpm = Math.round(this.calculateWPM(this.startTime, Date.now(), this.playerScore));
+
+    this.stopListening();
+    $(document).off('keydown');
+    $('body').animate({opacity: 0}, (function () {
+
     this.$el.empty();
     $('#keyboard').remove();
-    this.$el.append($('<h1>You Lose!</h1>').addClass(''));
-    var graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'}).reanimateBarGraphs();
-  },
-  renderStats: function () {
+    this.keyboard.remove();
+    this.gameView.remove();
 
+    this.$el.append($('<h1>You Lose</h1>').addClass('end'));
+    this.graph = new KeyPress_BarGraphView({model: this.keyPressModel, domID:'#bargraph'});
+    this.graph.reanimateBarGraphs();
+
+    this.$el.append($('<h3>WPM: ' + wpm + '</h3>').addClass('score'));
+
+    var $btn = $('<button>New Game</button>').addClass('end-btn');
+    this.$el.append($btn);
+    $btn.click(this.newGame.bind(this));
+
+
+    $('body').css({opacity: 0});
+    $('body').animate({opacity: 1});
+    }).bind(this));
+  },
+  newGame: function () {
+    $('#bargraph').remove();
+    this.graph.remove();
+    $('body').empty();
+    this.renderJoinScreen();
+  },
+  calculateWPM: function (startTime, endTime, words){
+    return words/( (endTime - startTime)/1000/60 );
   }
 });
