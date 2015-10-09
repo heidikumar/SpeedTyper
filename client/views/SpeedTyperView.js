@@ -45,7 +45,7 @@ var SpeedTyperView = Backbone.View.extend({
     this.animating = false;
     this.top = 0;
     $(document).on('keydown', this.keyDownEventHandler.bind(this) );
-    this.$('#input_bar').focus();
+    $('#input_bar').focus();
   },
 
   render: function () {
@@ -55,13 +55,12 @@ var SpeedTyperView = Backbone.View.extend({
     });
     this.$el.append($speedTyper);
 
-    var $hiddenInput = $('<input>', {type:'text', class: 'hidden', id: 'input_bar'});
+    var $hiddenInput = $('<input>', {type:'text', class: 'hidden', id: 'input_bar' , autofocus:'true'});
+
     $('#appContainer').append($hiddenInput);
     $hiddenInput.blur(function () {
       $hiddenInput.focus();
     });
-    
-    return this.$el;
   }, 
 
   keyDownEventHandler: function (e) {
