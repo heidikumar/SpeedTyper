@@ -27,7 +27,6 @@ Contains all users who are currently logged in
 
 */
 
-
 /*----------  Handler Functions  ----------*/
 
 exports.loginUser = function (data, socketId) {
@@ -57,24 +56,6 @@ exports.matchPlayers = function() {
   console.log("\nTell players these matches: " + matches);
   return matches;
 };
-
-// exports.joinGameOrWait = function (socketId) {
-//   // Check if opponent is available
-//   if (waiting.length > 0) {
-//     // Get the opponent data
-//     var opponentId = waiting.shift();
-//     // Set the opponent of each player
-//     exports.users[socketId].opponent = opponentId;
-//     exports.users[opponentId].opponent = socketId;
-//     console.log('\nPlayer ' + socketId + ' is matched with ' + opponentId);
-//     return opponentId;
-//   } else {
-//     // User joins the waiting queue
-//     waiting.push(socketId);
-//     console.log('\nPlayer ' + socketId + ' is waiting for an opponent');
-//     return null;
-//   }
-// };
 
 exports.updateScore = function (socketId, data) {
   // Update player's score
