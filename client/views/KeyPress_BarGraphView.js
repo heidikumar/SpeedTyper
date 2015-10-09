@@ -44,12 +44,13 @@ var KeyPress_BarGraphView = Backbone.View.extend({
 
     // Constantly reanimate
     var that = this;
-    setInterval(function () {
+    /*setInterval(function () {
       that.reanimateBarGraphs();
-      that.model.initializeKeyPressData(true);
-    }, 1100)
-    // Animate bar heights
-    // this.reanimateBarGraphs();
+      that.model.initializeKeyPressData();
+    }, 1100);*/
+
+    // Randomly generate individual key presses
+    this.model.simulateKeyPresses(20, .8);
   },
 
   // Makes filters for data for letters and ~letters
@@ -73,9 +74,11 @@ var KeyPress_BarGraphView = Backbone.View.extend({
   // Initialize all listeners for model changes
   initializeListeners: function () {
     // On a keypress change, animate the data
-    this.model.on('change:keyPressData',
-      this.reanimateBarGraphs,
-      this);
+    var that = this;
+    this.model.on('updateOneKeyPress', function (key) {
+      // Animate an individual bar
+      that.reanimateOneBar(key);
+    });
   },
 
   // Initialize graphs
@@ -133,6 +136,11 @@ var KeyPress_BarGraphView = Backbone.View.extend({
         // Add general and specific bar class
         .attr('class', 'barGraphView_Graph_Bar '
           + this.graphBarClasses[i].replace('.', ''))
+        // Add specific id based on key's char code
+        .attr('id', function (d) {
+          return 'barGraphView_Graph_BarID_'
+            + d.charCodeAt(0);
+        })
         // Add text
         .text('_')
         // Add text to each bar
@@ -248,5 +256,52 @@ var KeyPress_BarGraphView = Backbone.View.extend({
           return that.model.interpretToColor_Dynamic(badPressRatio);
         });
     }
+  },
+
+  // Reanimate an individual bar height
+  reanimateOneBar: function (key) {
+    // This binding
+    var that = this;
+
+    // Get keyPressData
+    var keyPressData = this.model.get('keyPressData');
+
+    // Height of containing div
+    var containerHeight = Number(d3
+      .selectAll(this.graphIDs[0])
+      .style('height').replace('px', ''));
+
+    // Bar DOM id
+    var barID = '#barGraphView_Graph_BarID_'
+      + key.charCodeAt(0);
+
+    // Animate the bar
+    d3.select('body ' + barID)
+      // Transition
+      .transition()
+      .duration(100)
+      // Calculate height based off of occurence
+      .style('height', function () {
+        var totalPresses = keyPressData[key].goodPresses
+          + keyPressData[key].badPresses;
+        var barHeight
+          = (keyPressData[key].goodPresses/totalPresses * .7 + .3)
+            * containerHeight;
+        return barHeight + 'px';
+      })
+      // Calculate color based on heat mapping
+      .style('background-color', function () {
+        // Get all presses
+        var totalPresses = keyPressData[key].badPresses
+          + keyPressData[key].goodPresses;
+        // Avoid division by 0
+        if (!totalPresses) {
+          return that.model.get('heatMapColors').goodColor.color;
+        }
+        // Get bad press ratio mapping
+        var badPressRatio
+          = keyPressData[key].badPresses / totalPresses;
+        return that.model.interpretToColor_Dynamic(badPressRatio);
+      });
   }
 });
