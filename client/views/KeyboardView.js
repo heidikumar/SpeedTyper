@@ -66,7 +66,7 @@ var KeyboardView = Backbone.View.extend({
     this.options = _.extend({}, this.defaults, this.options);
     this.mock = this.initializeMockData();
 
-    this.model.on('updateOneKeyPress', function(key) {
+    this.model.on('updateOneKeyPress', '#input_bar', function(key) {
       //find ratio first
       var ratio = this.calculateRatio(this.model.keyPressData.key.goodPresses,
         this.model.keyPressData.key.badPresses);
@@ -91,6 +91,8 @@ var KeyboardView = Backbone.View.extend({
 
       var fill = "#97c5d5";
 
+      //I don't need this, but I'm not deleting it until testing is complete.
+
       $("body").on('keypress', '#input_bar', function (event) {
         var keyCode = event.keyCode;
         var letter = String.fromCharCode(keyCode);
@@ -104,7 +106,7 @@ var KeyboardView = Backbone.View.extend({
       });
 
       //clearing out the colors from the legend
-      that.modifyKeyboardColor(that.defaults.legendClearOut, "#eeeeee");
+      that.modifyKeyboardColor(that.defaults.legendClearOut, "#FFFFFF");
 
       //clearing out the text from the legend
       for (var j=0; j<that.defaults.textToClear.length; j++) {
