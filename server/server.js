@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var handlers = require('./request-handlers');
@@ -27,7 +26,6 @@ if (!module.parent) {
 }
 
 /*----------  Socket listeners  ----------*/
-
 // When user navigates to website
 io.on('connection', function (socket) {
 
@@ -36,38 +34,50 @@ io.on('connection', function (socket) {
 
   // When user signs in: emitted from AppView
   socket.on('login', function (data) {
-
     console.log("\nSOCKET " + socket.id, "logged in.\n");
-
-    ///////////////////
-    // TEST USERNAME
-    // var data = {username : "balls"};
-    ////////////////////
-
     socketHandlers.loginUser(data, socket.id);
+  });
 
-    ////////////////////////
-    // TEST JOIN GAME FUNCTION - REMOVE THIS WHEN JOIN GAME BUTTON IS ADDED
-    // socketHandlers.waitForGame(socket.id);
-    //////////
+  // When user wants to join a private game
+  socket.on('requestJoinPrivateGame', function (data) {
 
+    // If user is NOT already in game
+    if (socketHandlers.users[socket.id].opponent === null) {
+      // If friend id is sent, make the match
+      if (data.friendId) {
+        var matched = socketHandlers.matchPlayers(socket.id, data.friendId);
+        // If match is successful
+        if (matched) {
+          // Look up player names
+          var player1Name = socketHandlers.users[socket.id].username;
+          var player2Name = socketHandlers.users[data.friendId].username;
+
+          // Emit match event to tell players to start game
+          io.to(socket.id).emit('match', { opponentName : player2Name });
+          io.to(data.friendId).emit('match', { opponentName : player1Name });
+          console.log(player1Name + " and " + player2Name + " told they're matched");
+
+        // If match not successful, tell user
+        } else {
+          io.to(socket.id).emit('joinPrivateGameDenied',
+            { message: "Wrong friend id or friend is in game" });
+        }
+      // If friend id not sent, give user his socket id so he can give tell it
+      // to a friend
+      } else {
+        io.to(socket.id).emit('waitForFriend', { id: socket.id });
+      }
+    // User is already in game
+    } else {
+      io.to(socket.id).emit('joinPrivateGameDenied',
+        { message: "You are still in a game" });
+    }
   });
 
   // When user wants to join a game
   socket.on('requestJoinGame', function() {
+    // TODO: handle if user is already in game
     socketHandlers.waitForGame(socket.id);
-    // var opponentId = socketHandlers.joinGameOrWait(socket.id);
-    // // If an opponent is found
-    // if (opponentId) {
-    //   // Look up the usernames
-    //   var playerName = socketHandlers.users[socket.id].username;
-    //   var opponentName = socketHandlers.users[opponentId].username;
-    //   // Emit match event to tell players to start game
-    //   io.to(socket.id).emit('match', { opponentName : opponentName });
-    //   io.to(opponentId).emit('match', { opponentName : playerName });
-    //   console.log(playerName + " and " + opponentName +
-    //     " now know they are matched");
-    // }
   });
 
   // When player updates server with score
@@ -105,7 +115,7 @@ io.on('connection', function (socket) {
 
 // Match players every 5 seconds
 setInterval(function () {
-  var matches = socketHandlers.matchPlayers();
+  var matches = socketHandlers.matchAllPlayers();
   /*
     matches = [
       ['dfdfdvs323f', 'dfsdfsv32324'],

@@ -2,7 +2,6 @@ var server = require('./server');
 
 /*----------  Server Cache  ----------*/
 
-
 exports.users = { count: 0 };
 var waiting = []; // socket ids of all users waiting to play a game
 
@@ -27,7 +26,6 @@ Contains all users who are currently logged in
 
 */
 
-
 /*----------  Handler Functions  ----------*/
 
 exports.loginUser = function (data, socketId) {
@@ -39,10 +37,11 @@ exports.loginUser = function (data, socketId) {
 };
 
 exports.waitForGame = function (socketId) {
+  // TODO: check to see if player is not already in game
   waiting.push(socketId);
 };
 
-exports.matchPlayers = function() {
+exports.matchAllPlayers = function() {
   console.log("\nin waiting room: " + waiting);
   var matches = [];
   while (waiting.length >= 2) {
@@ -58,23 +57,22 @@ exports.matchPlayers = function() {
   return matches;
 };
 
-// exports.joinGameOrWait = function (socketId) {
-//   // Check if opponent is available
-//   if (waiting.length > 0) {
-//     // Get the opponent data
-//     var opponentId = waiting.shift();
-//     // Set the opponent of each player
-//     exports.users[socketId].opponent = opponentId;
-//     exports.users[opponentId].opponent = socketId;
-//     console.log('\nPlayer ' + socketId + ' is matched with ' + opponentId);
-//     return opponentId;
-//   } else {
-//     // User joins the waiting queue
-//     waiting.push(socketId);
-//     console.log('\nPlayer ' + socketId + ' is waiting for an opponent');
-//     return null;
-//   }
-// };
+exports.matchPlayers = function(player1, player2) {
+  // Check if player IDs are valid and players are not already in game
+  if (exports.users[player1] &&
+      exports.users[player2] &&
+      exports.users[player1].opponent === null &&
+      exports.users[player2].opponent === null)
+  {
+    // Set the opponent of each player
+    exports.users[player1].opponent = player2;
+    exports.users[player2].opponent = player1;
+    console.log('\nServer matched player ' + player1 + ' with ' + player2);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 exports.updateScore = function (socketId, data) {
   // Update player's score
