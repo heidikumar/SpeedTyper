@@ -38,23 +38,43 @@ exports.loginUser = function (data, socketId) {
   console.log('This is the users object:\n', exports.users);
 };
 
-exports.joinGameOrWait = function (socketId) {
-  // Check if opponent is available
-  if (waiting.length > 0) {
-    // Get the opponent data
-    var opponentId = waiting.shift();
-    // Set the opponent of each player
-    exports.users[socketId].opponent = opponentId;
-    exports.users[opponentId].opponent = socketId;
-    console.log('\nPlayer ' + socketId + ' is matched with ' + opponentId);
-    return opponentId;
-  } else {
-    // User joins the waiting queue
-    waiting.push(socketId);
-    console.log('\nPlayer ' + socketId + ' is waiting for an opponent');
-    return null;
-  }
+exports.waitForGame = function (socketId) {
+  waiting.push(socketId);
 };
+
+exports.matchPlayers = function() {
+  console.log("\nin waiting room: " + waiting);
+  var matches = [];
+  while (waiting.length >= 2) {
+    var player1 = waiting.shift();
+    var player2 = waiting.shift();
+    matches.push([player1, player2]);
+    // Set the opponent of each player
+    exports.users[player1].opponent = player2;
+    exports.users[player2].opponent = player1;
+    console.log('\nServer matched player ' + player1 + ' with ' + player2);
+  }
+  console.log("\nTell players these matches: " + matches);
+  return matches;
+};
+
+// exports.joinGameOrWait = function (socketId) {
+//   // Check if opponent is available
+//   if (waiting.length > 0) {
+//     // Get the opponent data
+//     var opponentId = waiting.shift();
+//     // Set the opponent of each player
+//     exports.users[socketId].opponent = opponentId;
+//     exports.users[opponentId].opponent = socketId;
+//     console.log('\nPlayer ' + socketId + ' is matched with ' + opponentId);
+//     return opponentId;
+//   } else {
+//     // User joins the waiting queue
+//     waiting.push(socketId);
+//     console.log('\nPlayer ' + socketId + ' is waiting for an opponent');
+//     return null;
+//   }
+// };
 
 exports.updateScore = function (socketId, data) {
   // Update player's score
@@ -86,9 +106,10 @@ exports.checkForEndGame = function (socketId, opponentId) {
 };
 
 exports.removePlayer = function (socketId, opponentId) {
-  // If user has an opponent, cancel the association in users cache
+  // If user has an opponent, reset its opponent in users cache
   if (opponentId) {
     exports.users[opponentId].opponent = null;
+    exports.users[opponentId].score = 0;
   }
   // If user is in waiting queue, remove it
   for (var i = 0; i < waiting.length; i++) {
