@@ -2,7 +2,6 @@ var server = require('./server');
 
 /*----------  Server Cache  ----------*/
 
-
 exports.users = { count: 0 };
 var waiting = []; // socket ids of all users waiting to play a game
 
@@ -38,10 +37,11 @@ exports.loginUser = function (data, socketId) {
 };
 
 exports.waitForGame = function (socketId) {
+  // TODO: check to see if player is not already in game
   waiting.push(socketId);
 };
 
-exports.matchPlayers = function() {
+exports.matchAllPlayers = function() {
   console.log("\nin waiting room: " + waiting);
   var matches = [];
   while (waiting.length >= 2) {
@@ -56,6 +56,23 @@ exports.matchPlayers = function() {
   console.log("\nTell players these matches: " + matches);
   return matches;
 };
+
+exports.matchPlayers = function(player1, player2) {
+  // Check if player IDs are valid and players are not already in game
+  if (exports.users[player1] &&
+      exports.users[player2] &&
+      exports.users[player1].opponent === null &&
+      exports.users[player2].opponent === null)
+  {
+    // Set the opponent of each player
+    exports.users[player1].opponent = player2;
+    exports.users[player2].opponent = player1;
+    console.log('\nServer matched player ' + player1 + ' with ' + player2);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 exports.updateScore = function (socketId, data) {
   // Update player's score
