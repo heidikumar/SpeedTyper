@@ -22,7 +22,7 @@ var CharacterView = Backbone.View.extend({
     }
     if (this.model.get('isCurrent')) {
       this.$el.addClass('cursor');
-
+      
       var parentPos = this.$el.parent().position().top;
       if (parentPos > window.startPos + 37 && !window.animatingScroll){
         window.animatingScroll = true;
