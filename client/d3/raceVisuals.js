@@ -8,7 +8,7 @@ var GameScreen = function (width, height, threshold) {
 }
 
 GameScreen.prototype.initialize = function () {
-  var div = d3.select('body')
+  var div = d3.select('#appContainer')
               // .append('div')
               // .attr('id', 'competition')
               .append('svg:svg')

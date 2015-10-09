@@ -1,51 +1,110 @@
 body {
-  background-color: #eee;
+  font-family: monospace;
+  font-size: 20px;
+  color: #999999;
+}
+
+#appContainer {
   width: 100%;
-  font-size: 24px;
-}
-
-.container {
-  width: 800px;
-  margin: 0px auto;
+  margin-top: 10%;
   text-align: center;
-  font-family: Arial;
 }
-
-svg {
-  margin: 100px auto 0 auto;
-  display: block;
+#textContainer {
+  height: 4.5em;
+  width: 500px;
+  overflow: hidden;
+  margin: 0 auto;
 }
+.word {
+  display: inline-block;
+  box-sizing: border-box;
 
-.warning {
-  color: red;
+  text-align:center;
 }
+.word span {
+  display: inline-block;
+  box-sizing: border-box; 
 
-.correct{
-  outline-color: green;
+  border: 0 solid transparent;
+  border-bottom-width: 0.1em;
+  border-radius:0.2em;
+
+  /* letter-spacing: -0.1em; */
+  padding: 0.1em 0.05em 0 0.05em;
+  margin: 1px;
+  /*min-width: 1em;*/
 }
-
+.correct {
+  color: inherit;
+  background-color: rgba(0, 255, 0, 0.5);
+}
 .incorrect {
-  outline-color: red;
+  color: inherit;
+  background-color: rgba(255, 0, 0, 0.5);
 }
-
-input { 
-  width: 400px;
-  height: 40px;
-  padding: 0px 7px;
-  border-radius: 5px;
-  border: 1px solid lightgrey;
-  font-size: 18px;
-  margin-top: 10px;
+.corrected {
+  color: inherit;
+  background-color: rgba(255, 255, 0, 0.5);
 }
-
-.noOutline { 
-  outline: none;
+.clear {
+  
 }
-
-.currentWord {
-  background-color: white;
+.current-word {
+  color:black;
+  border: 0 dotted gray;
+  border-bottom-width: 0.1em;
+  border-radius:0.2em;
 }
-
-input:disabled {
-  background-color: #eee;
+.skipped {
+  border-color: red;
+}
+.cursor {
+  color: inherit;
+  background-color: transparent;
+  -webkit-animation: blinkCursor 0.5s infinite;
+  -moz-animation: blinkCursor 0.5s infinite;
+}
+@-webkit-keyframes blinkCursor {
+  from {border-bottom-color: transparent;}
+    to {border-bottom-color: black;}
+}
+@-moz-keyframes blinkCursor {
+  from {border-bottom-color: transparent;}
+    to {border-bottom-color: black;}
+}
+.btn {
+  background: #3498db;
+  width:200px;
+  height: 50px;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 13;
+  -moz-border-radius: 13;
+  border-radius: 13px;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  margin-top: 5%;
+}
+.title {
+  color:black;
+  margin-top: 15%;
+}
+.subHeading { 
+  margin-top: 6%;
+}
+.nameInput {
+  width: 20%;
+  margin-top: 5%;
+  padding: 10px;
+  border: solid 5px #c9c9c9;
+  transition: border 0.3s;
+}
+.nameInput input:focus,
+.nameInput input.focus {
+  border: solid 5px #969696;
 }
