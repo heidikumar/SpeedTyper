@@ -15,8 +15,8 @@ var WordView = Backbone.View.extend({
   },
   renderCurrentWord: function () {
     this.$el.removeClass('current-word skipped');
+
     if(this.model.get('isCurrentWord')) {
-      console.log('is current word')
       this.$el.addClass('current-word');
       if(!this.model.get('chars').some(function(char){ 
           return char.get('isCurrent'); 
