@@ -96,8 +96,62 @@ var KeyPress_BarGraphView = Backbone.View.extend({
       .style('margin-top', '20px')
       .style('width', '50%')
       .style('margin-left', '25%')
+      // Append title
       .append('h2')
-      .text('Keyboard Accuracy Graph');
+      .text('Keyboard Accuracy Graph')
+    
+    // Append scale text
+    var scaleVars = ['Poor', 'Good'];
+    d3.select('body ' + this.domID)
+      .append('ul')
+      .style('list-style-type', 'none')
+      .style('margin', '0')
+      .style('padding', '0')
+      .selectAll('li')
+      .data(scaleVars)
+      .enter()
+      .append('li')
+      .attr('class', 'barGraphView_ScaleTitle')
+      .text(function (d) {
+        return d;
+      });
+
+    // Append gradient scale
+    d3.select('body ' + this.domID)
+      .append('div')
+      // Background image gradient
+      .style('background-image',
+        'linear-gradient(to right, '
+          + this.model.get('heatMapColors').badColor.color
+          + ', '
+          + this.model.get('heatMapColors').goodColor.color
+          + ')')
+      // Safari
+      .style('background-image',
+        '-webkit-linear-gradient(left, '
+          + this.model.get('heatMapColors').badColor.color
+          + ', '
+          + this.model.get('heatMapColors').goodColor.color
+          + ')')
+      // Opera
+      .style('background-image',
+        '-o-linear-gradient(right, '
+          + this.model.get('heatMapColors').badColor.color
+          + ', '
+          + this.model.get('heatMapColors').goodColor.color
+          + ')')
+      // Firefox
+      .style('background-image',
+        '-moz-linear-gradient(right, '
+          + this.model.get('heatMapColors').badColor.color
+          + ', '
+          + this.model.get('heatMapColors').goodColor.color
+          + ')')
+      // General styling
+      .style('width', '25%')
+      .style('height', '20px')
+      .style('margin', '1% auto')
+      .style('border-radius', '5px');
 
     // Iterate over graph ids
     var graphIDs = this.graphIDs;
