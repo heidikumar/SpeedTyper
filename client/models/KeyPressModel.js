@@ -31,7 +31,7 @@ var KeyPressModel = Backbone.Model.extend({
   // Initialize
   initialize: function () {
     // Initialize the data (true indicates make mock data)
-    this.initializeKeyPressData(true);
+    this.initializeKeyPressData();
   },
 
   // Initializes mock data
@@ -108,5 +108,36 @@ var KeyPressModel = Backbone.Model.extend({
     // Add # for css style string
     result = '#' + result;
     return result;
+  },
+
+  // Updates an individual keyPressData entry
+  updateOneKeyPress: function (keyAsChar, isGoodPress) {
+    // Ensure key in keyPressData
+    var keyPressData = this.get('keyPressData');
+    if (keyAsChar in keyPressData) {
+      // Update accordingly
+      if (isGoodPress) {
+        ++keyPressData[keyAsChar].goodPresses;
+      } else {
+        ++keyPressData[keyAsChar].badPresses;
+      }
+      // Update an individual bar here
+      this.trigger('updateOneKeyPress', keyAsChar);
+    }
+  },
+
+  // A function that simulates key presses
+  // (Rate specified in ms)
+  simulateKeyPresses: function (rate, accuracy) {
+    var that = this;
+    var rate = rate || 50;
+    var accuracy = accuracy || .50;
+    setInterval(function () {
+      var randomChar = String.fromCharCode(32
+        + Math.floor(Math.random() * 95));
+      var randomBool
+        = Math.random() < accuracy;
+      that.updateOneKeyPress(randomChar, randomBool);
+    }, rate);
   }
 });
