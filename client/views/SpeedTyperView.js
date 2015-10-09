@@ -43,7 +43,8 @@ var SpeedTyperView = Backbone.View.extend({
     this.lineNum =0;
     this.animating = false;
     this.top = 0;
-    $(document).on('keydown', this.keyDownEventHandler.bind(this) )
+    $(document).on('keydown', this.keyDownEventHandler.bind(this) );
+    this.$('#input_bar').focus();
   },
 
   render: function () {
@@ -52,6 +53,11 @@ var SpeedTyperView = Backbone.View.extend({
       $speedTyper.append(new WordView({model: word}).$el);
     });
     this.$el.append($speedTyper);
+    var $hiddenInput = $('<input>', {type:'text', class: 'hidden', id: 'input_bar'});
+    this.$el.parent().append($hiddenInput);
+    $hiddenInput.blur(function () {
+      $hiddenInput.focus();
+    });
     return this.$el;
   }, 
 
@@ -76,9 +82,6 @@ var SpeedTyperView = Backbone.View.extend({
       this.allChars.models[this.currentCharIdx].set('isCurrent', true);
       return;
     }
-    //normalize keyCode 
-    
-
     // var keypress = {
     //     time: e.timestamp,
     //     key: key,
@@ -95,6 +98,7 @@ var SpeedTyperView = Backbone.View.extend({
     this.currentCharIdx++;
     this.allChars.models[this.currentCharIdx].set('isCurrent', true);
     currentCharModel.set('isCurrent', false);
+    this.$('#input_bar').focus();
   },
   setNextWord: function (word) {
     console.log('next');

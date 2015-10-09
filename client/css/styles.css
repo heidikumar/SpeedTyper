@@ -6,7 +6,7 @@ body {
 
 #appContainer {
   width: 100%;
-  margin-top: 10%;
+  margin-top: 7%;
   text-align: center;
 }
 #textContainer {
@@ -52,7 +52,7 @@ body {
 .current-word {
   color:black;
   border: 0 dotted gray;
-  border-bottom-width: 0.1em;
+  border-bottom-width: 0.15em;
   border-radius:0.2em;
 }
 .skipped {
@@ -107,4 +107,16 @@ body {
 .nameInput input:focus,
 .nameInput input.focus {
   border: solid 5px #969696;
+}
+.hidden{
+  position: absolute;
+  left: -300px;
+}
+.player{
+  float: left;
+  margin-left: 20%;
+}
+.opponent{
+  float: right;
+  margin-right: 20%;
 }
