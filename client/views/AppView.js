@@ -55,12 +55,13 @@ var AppView = Backbone.View.extend({
     this.$el.append($('<h3>Searching for game...</h3>').addClass('subHeading'));
     this.socket.emit('requestJoinGame', {username: this.username});
   },
-  beginGame: function (){
+  beginGame: function (data){
     console.log('FoundGame!');
     $('h3').remove();
     this.$el.append($('<h3>Starting Game</h3>').addClass('subHeading'));
     this.playerScore = 0;
     this.opponentScore = 0;
+    this.opponentName = data.opponentName;
     this.fetchText();
   },
   fetchText: function() {
@@ -73,6 +74,8 @@ var AppView = Backbone.View.extend({
   renderGame: function (text){
     this.$el.empty();
 
+    this.$el.append($('<div/>', {class:'player'}).text(this.username) );
+    this.$el.append($('<div/>', {class:'opponent'}).text(this.opponentName) );
     this.game = new GameScreen(window.innerWidth, 100, 40);
     this.game.initialize();
     this.game.render(0,0);
