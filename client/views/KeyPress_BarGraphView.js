@@ -94,6 +94,8 @@ var KeyPress_BarGraphView = Backbone.View.extend({
       .style('border', '5px solid black')
       .style('border-radius', '.5em')
       .style('margin-top', '20px')
+      .style('width', '50%')
+      .style('margin-left', '25%')
       .append('h2')
       .text('Keyboard Accuracy Graph');
 
@@ -108,6 +110,11 @@ var KeyPress_BarGraphView = Backbone.View.extend({
         .attr('class', 'barGraphView_Graph')
         // Add id
         .attr('id', graphIDs[i].replace('#', ''));
+      // Add bottom margin to last element
+      if(i === graphIDs.length - 1) {
+        d3.select('body ' + graphIDs[i])
+          .style('margin-bottom', '2%');
+      }
     }
   },
 
@@ -159,7 +166,7 @@ var KeyPress_BarGraphView = Backbone.View.extend({
             .text(function () {
               // Special for whitespace
               if (d === ' ') {
-                return '" "';
+                return '()';
               }
               // Otherwise return d
               return d;
