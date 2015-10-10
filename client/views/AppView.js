@@ -45,10 +45,15 @@ var AppView = Backbone.View.extend({
   renderJoinScreen: function () {
     this.$el.empty();
     this.$el.append($('<h1>Speed Typer</h1>').addClass('title'));
-    var $btn = $('<button>Join Game</button>').addClass('btn');
-    this.$el.append($btn);
+    var $findbtn = $('<button>Find Game</button>').addClass('btn');
+    this.$el.append($findbtn);
 
-    $btn.click(this.joinGame.bind(this));
+    $findbtn.click(this.joinGame.bind(this));
+
+    var $joinPrivatebtn = $('<button>Private Game</button>').addClass('btn');
+    this.$el.append($joinPrivatebtn);
+
+    $joinPrivatebtn.click(this.joinPrivateGame.bind(this));
   },
   joinGame: function () {
     $('button').remove();
@@ -58,6 +63,9 @@ var AppView = Backbone.View.extend({
   beginGame: function (data){
     console.log('FoundGame!');
     $('h3').remove();
+    $('h4').remove();
+    $('h5').remove();
+    $('input').remove();
     this.$el.append($('<h3>Starting Game</h3>').addClass('subHeading'));
 
     this.playerScore = 0;
@@ -169,5 +177,34 @@ var AppView = Backbone.View.extend({
   },
   calculateWPM: function (startTime, endTime, words){
     return words/( (endTime - startTime)/1000/60 );
+  },
+  joinPrivateGame: function () {
+    var that = this;
+    this.socket.on('waitForFriend', function (data) {
+      that.renderPrivateJoin(data.id);
+    });
+    this.socket.emit('requestJoinPrivateGame', {});
+  },
+  renderPrivateJoin: function (mySocket) {
+    this.$el.empty();
+    this.$el.append($('<h1>Speed Typer</h1>').addClass('title'));
+    this.$el.append($('<h3>Your game ID is <b>' + mySocket + '</b></h3>'));
+    this.$el.append($('<h4>Give friend your ID or enter friends game ID below</h4>').css({'margin-top':'40px'}));
+    $input = $('<input>', {type:'text', placeholder: 'Enter gameID to join', class: 'nameInput'}).css({'margin-top':'1%'});
+    $form = $('<form/>').append($input);
+    this.$el.append($form);
+
+    var $message = $('<h5/>').addClass('warn');
+    this.$el.append($message);
+
+    var that = this;
+    $form.submit(function (e) {
+      e.preventDefault();
+      that.socket.emit('requestJoinPrivateGame', {friendId: $input.val()});
+      $input.val('');
+    });
+    this.socket.on('joinPrivateGameDenied', function (data) {
+      $message.text(data.message);
+    });
   }
 });

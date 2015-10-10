@@ -150,7 +150,11 @@ body {
 }
 .warn {
   opacity: 1;
+  color: red;
 }
 #warning {
   color: red;
+}
+b {
+  color: green;
 }
