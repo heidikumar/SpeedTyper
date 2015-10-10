@@ -4,6 +4,18 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var handlers = require('./request-handlers');
 var socketHandlers = require('./socket-handlers');
+var twitterAuth = require('twitter-oauth')({
+     consumerKey: "4Xk4mOmjXefxWqRiaflwBGbld",
+     domain: 'https://speedtyper-hr.herokuapp.com/',
+     consumerSecret: "Y414TPUj94j0zA3kRsz3Bw588ZHcH5lu4YxtYc5T62eXghmuAs", /* create a comsumer key here: https://dev.twitter.com/apps */
+     loginCallback: "https://speedtyper-hr.herokuapp.com/",  /* internal */
+     completeCallback:  "https://speedtyper-hr.herokuapp.com/"  /* When oauth has finished - where should we take the user too */
+});
+
+//routing for twitter
+app.get('/twitter/sessions/connect', twitterAuth.oauthConnect);
+app.get('/twitter/sessions/callback', twitterAuth.oauthCallback);
+app.get('/twitter/sessions/logout', twitterAuth.logout);
 
 // Middleware
 var parser = require('body-parser');
@@ -112,6 +124,36 @@ io.on('connection', function (socket) {
     console.log("\nSOCKET " + socket.id, "disconnected.");
   });
 });
+
+/*----------  Twitter  ----------*/
+//None of this was necessary because there is an npm module to handle this!
+//These may need to be transferred to another file, but I want access to app.
+
+// var getOAuthToken = function () {
+//   var token, secret, callback;
+//   app.post('https://api.twitter.com/oauth/request_token', function (req, res) {
+//     //not sure about setting the req this way. Seems synchronous.
+//     req.oauth_callback = 'https://speedtyper-hr.herokuapp.com/';
+//     if (res.status === 200) {
+//       token = res.oauth_token;
+//       secret = res.oauth_token_secret; //saving for now, but I don't think I need this
+//       //need to pass these on for converting request token to access token
+//       return {token: token, secret: secret};
+//     } else {
+//       console.log('Error in oauth token request.');
+//     }
+//   });
+// };
+
+// var redirectToTwitter = function (data) { //data will be the object from getOAuthToken
+//   //Needs to be called on login after oauth_token is found.
+//   var url = 'https://api.twitter.com/oauth/authenticate?oauth_token=' + data.token;
+//   app.get(url, function (req, res) {
+//     //continue to build on response object
+//     data.verifier = res.oauth_verifier;
+//     return data;
+//   });
+// };
 
 // Match players every 5 seconds
 setInterval(function () {
